@@ -1,20 +1,8 @@
-[package]
-name    = "flo_svg"
-version = "0.1.0"
-authors = ["Andrew Hunter <andrew@logicalshift.co.uk>"]
-edition = "2021"
-license = "Apache-2.0"
-readme  = "README.md"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[dependencies]
-svg                 = "0.18"
-svgtypes            = "0.16"
-flo_canvas          = "0.4"
-flo_draw            = "0.4"
-simplecss           = "0.2"
-css-color-parser    = "0.1"
+[workspace]
+members     = [
+    "svg",
+]
+resolver    = "2"
 
 [patch.crates-io]
 flo_binding             = { git = "https://github.com/Logicalshift/flo_binding", branch = "v3.0" }
