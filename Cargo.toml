@@ -11,19 +11,23 @@ readme  = "README.md"
 [dependencies]
 svg                 = "0.9"
 svgtypes            = "0.5"
-flo_canvas          = "0.2"
-flo_draw            = "0.2"
+flo_canvas          = "0.4"
+flo_draw            = "0.4"
 simplecss           = "0.2"
 css-color-parser    = "0.1"
 
 [patch.crates-io]
-flo_draw                = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
-flo_canvas              = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
-# flo_canvas_events       = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
-flo_render              = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
-flo_render_canvas       = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
-flo_render_gl_offscreen = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
-# flo_render_software     = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_binding             = { git = "https://github.com/Logicalshift/flo_binding", branch = "v3.0" }
+flo_scene               = { git = "https://github.com/Logicalshift/flo_scene", branch = "v0.3" }
+flo_scene_guest         = { git = "https://github.com/Logicalshift/flo_scene", branch = "v0.3" }
+
+flo_draw                = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_canvas              = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_canvas_events       = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_render              = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_render_canvas       = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_render_gl_offscreen = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_render_software     = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
 
 # flo_canvas              = { path = "../flo_draw/canvas" }
 # flo_render              = { path = "../flo_draw/render" }
