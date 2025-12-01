@@ -1,0 +1,32 @@
+[package]
+name    = "flo_svg"
+version = "0.1.0"
+authors = ["Andrew Hunter <andrew@logicalshift.co.uk>"]
+edition = "2021"
+license = "Apache-2.0"
+readme  = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+svg                 = "0.9"
+svgtypes            = "0.5"
+flo_canvas          = "0.2"
+flo_draw            = "0.2"
+simplecss           = "0.2"
+css-color-parser    = "0.1"
+
+[patch.crates-io]
+flo_draw                = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
+flo_canvas              = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
+# flo_canvas_events       = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+flo_render              = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
+flo_render_canvas       = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
+flo_render_gl_offscreen = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.2" }
+# flo_render_software     = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+
+# flo_canvas              = { path = "../flo_draw/canvas" }
+# flo_render              = { path = "../flo_draw/render" }
+# flo_render_canvas       = { path = "../flo_draw/render_canvas" }
+# flo_render_gl_offscreen = { path = "../flo_draw/render_gl_offscreen" }
+# flo_draw                = { path = "../flo_draw/draw" }
