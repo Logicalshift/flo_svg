@@ -3,12 +3,11 @@ use super::svg_reader_state::*;
 use flo_canvas::*;
 
 use svg::parser;
-use futures::prelude::*;
 
 ///
-/// Given a stream of SVG parser events, generates a stream of `Draw` events that describes how to render it on screen
+/// Given a iterator of SVG parser events, generates a stream of `Draw` events that describes how to render it on screen
 ///
-pub fn stream_svg_parser_events_to_canvas<'a>(events: impl 'a + Send + Stream<Item=parser::Event<'a>>) -> impl 'a + Send + Stream<Item=Draw> {
+pub fn svg_parser_events_to_drawing<'a>(events: impl 'a + Send + Iterator<Item=parser::Event<'a>>) -> impl 'a + Send + Iterator<Item=Draw> {
     // Create the initial state
     let mut state = SvgReaderState::default();
 
@@ -19,6 +18,6 @@ pub fn stream_svg_parser_events_to_canvas<'a>(events: impl 'a + Send + Stream<It
 
             state.accept(event, &mut drawing);
 
-            stream::iter(drawing)
+            drawing
         })
 }

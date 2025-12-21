@@ -1,4 +1,6 @@
 mod svg_reader_state;
-mod stream;
+mod iterator;
+mod parse;
 
-pub use stream::*;
+pub use iterator::*;
+pub use parse::*;
