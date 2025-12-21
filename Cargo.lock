@@ -115,6 +115,7 @@ version = "0.1.0"
 dependencies = [
  "css-color-parser",
  "flo_canvas",
+ "futures",
  "simplecss",
  "svg",
  "svgtypes",
