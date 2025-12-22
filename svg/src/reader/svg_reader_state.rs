@@ -48,6 +48,14 @@ impl SvgReaderState {
                 drawing.pop_state();
             },
 
+            Event::Tag("defs", Type::Start, _attributes) => { todo!("defs") }
+            Event::Tag("desc", Type::Start, _attributes) => { todo!("desc") }
+            Event::Tag("title", Type::Start, _attributes) => { todo!("title") }
+            Event::Tag("symbol", Type::Start, _attributes) => { todo!("symbol") }
+            Event::Tag("use", Type::Start, _attributes) => { todo!("use") }
+            Event::Tag("image", Type::Start, _attributes) => { todo!("image") }
+            Event::Tag("switch", Type::Start, _attributes) => { todo!("switch") }
+
             Event::Tag("path", Type::Start, attributes) |
             Event::Tag("path", Type::Empty, attributes) => {
                 let data = attributes.get("d").unwrap();
@@ -70,6 +78,42 @@ impl SvgReaderState {
                     style.render_path(drawing);
                 }
             }
+
+            Event::Tag("rect", Type::Start, _attributes) => { todo!("rect") }
+            Event::Tag("circle", Type::Start, _attributes) => { todo!("circle") }
+            Event::Tag("ellipse", Type::Start, _attributes) => { todo!("ellipse") }
+            Event::Tag("line", Type::Start, _attributes) => { todo!("line") }
+            Event::Tag("polyline", Type::Start, _attributes) => { todo!("polyline") }
+            Event::Tag("polygon", Type::Start, _attributes) => { todo!("polygon") }
+
+            Event::Tag("text", Type::Start, _attributes) => { todo!("text") }
+            Event::Tag("tspan", Type::Start, _attributes) => { todo!("tspan") }
+            Event::Tag("tref", Type::Start, _attributes) => { todo!("tref") }
+            Event::Tag("textPath", Type::Start, _attributes) => { todo!("textPath") }
+            Event::Tag("altGlyph", Type::Start, _attributes) => { todo!("altGlyph") }
+            Event::Tag("altGlyphDef", Type::Start, _attributes) => { todo!("altGlyphDef") }
+            Event::Tag("altGlyphItem", Type::Start, _attributes) => { todo!("altGlyphItem") }
+            Event::Tag("glyphRef", Type::Start, _attributes) => { todo!("glyphRef") }
+
+            Event::Tag("marker", Type::Start, _attributes) => { todo!("marker") }
+
+            Event::Tag("color-profile", Type::Start, _attributes) => { todo!("color-profile") }
+
+            Event::Tag("clipPath", Type::Start, _attributes) => { todo!("clipPath") }
+
+            Event::Tag("filter", Type::Start, _attributes) => { todo!("filter") }
+
+            Event::Tag("font", Type::Start, _attributes) => { todo!("font") }
+            Event::Tag("glyph", Type::Start, _attributes) => { todo!("glyph") }
+            Event::Tag("missing-glyph", Type::Start, _attributes) => { todo!("missing-glyph") }
+            Event::Tag("hkern", Type::Start, _attributes) => { todo!("hkern") }
+            Event::Tag("vkern", Type::Start, _attributes) => { todo!("vkern") }
+            Event::Tag("font-face", Type::Start, _attributes) => { todo!("font-face") }
+            Event::Tag("font-face-src", Type::Start, _attributes) => { todo!("font-face-src") }
+            Event::Tag("font-face-uri", Type::Start, _attributes) => { todo!("font-face-uri") }
+            Event::Tag("font-face-format", Type::Start, _attributes) => { todo!("font-face-format") }
+            Event::Tag("font-face-name", Type::Start, _attributes) => { todo!("font-face-name") }
+
             _ => { }
         }
     }
