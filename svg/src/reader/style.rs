@@ -30,6 +30,17 @@ pub struct Style {
 
 impl Style {
     ///
+    /// Parses a style from a
+    ///
+    pub fn from_style_value(style: &str) -> Self {
+        let style       = format!("path {{ {} }}", style);
+        let style       = StyleSheet::parse(&style);
+        let rule        = &style.rules[0];
+
+        Self::from_rule(&rule)
+    }
+
+    ///
     /// Parses a CSS rule to determine the style of a SVG path
     ///
     pub fn from_rule(rule: &Rule) -> Self {
@@ -86,6 +97,54 @@ impl Style {
             line_width,
             fill_opacity,
             stroke_opacity,
+        }
+    }
+
+    ///
+    /// Given a drawing context with a path defined in it, renders a shape using this style
+    ///
+    pub fn render_path(&self, drawing: &mut impl GraphicsContext) {
+        // Fill the shape first
+        match (&self.fill, &self.fill_opacity) {
+            (None, _) => { }
+
+            (Some(FillStyle::Color(fill)), None) => {
+                drawing.fill_color(*fill);
+                drawing.fill();
+            }
+
+            (Some(FillStyle::Color(fill)), Some(opacity)) => {
+                let (r, g, b, _a)   = fill.to_rgba_components();
+                let fill            = Color::Rgba(r, g, b, *opacity);
+
+                drawing.fill_color(fill);
+                drawing.fill();
+            }
+        }
+
+        // Draw the stroke next
+        if self.stroke.is_some() {
+            match &self.line_width {
+                None        => { drawing.line_width(1.0); }
+                Some(width) => { drawing.line_width(*width); }
+            }
+
+            match (&self.stroke, &self.stroke_opacity) {
+                (None, _) => { }
+
+                (Some(StrokeStyle::Solid(color)), None) => {
+                    drawing.stroke_color(*color);
+                    drawing.stroke();
+                }
+
+                (Some(StrokeStyle::Solid(color)), Some(opacity)) => {
+                    let (r, g, b, _a)   = color.to_rgba_components();
+                    let color           = Color::Rgba(r, g, b, *opacity);
+
+                    drawing.stroke_color(color);
+                    drawing.stroke();
+                }
+            }
         }
     }
 }

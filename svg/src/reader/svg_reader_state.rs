@@ -1,11 +1,11 @@
+use super::style::*;
+
 use flo_canvas::*;
 
 use svg::node::element::path::*;
 use svg::node::element::tag::*;
 use svg::parser;
 use svgtypes::{Transform};
-use simplecss::*;
-use css_color_parser::Color as CssColor;
 
 ///
 /// The state of an SVG -> flo_canvas reader
@@ -66,69 +66,8 @@ impl SvgReaderState {
                 }
 
                 if let Some(style) = attributes.get("style") {
-                    let style       = format!("path {{ {} }}", style);
-                    let style       = StyleSheet::parse(&style);
-                    let rule        = &style.rules[0];
-
-                    let mut fill    = None;
-                    let mut stroke  = None;
-
-                    for decl in rule.declarations.iter() {
-                        match decl.name {
-                            "fill"              => {
-                                if decl.value != "none" {
-                                    let col = decl.value.parse::<CssColor>().unwrap();
-                                    fill    = Some(Color::Rgba((col.r as f32)/255.0, (col.g as f32)/255.0, (col.b as f32)/255.0, col.a));
-                                } else {
-                                    fill    = None;
-                                }
-                            }
-                            "fill-opacity"      => { 
-                                let alpha           = decl.value.parse::<f32>().unwrap();
-                                let new_fill        = fill.unwrap_or(Color::Rgba(0.0, 0.0, 0.0, 1.0));
-                                let (r, g, b, _a)   = new_fill.to_rgba_components();
-                                fill                = Some(Color::Rgba(r, g, b, alpha));
-                            }
-                            "fill-rule"         => { }
-
-                            "stroke"            => { 
-                                if decl.value != "none" {
-                                    let col = decl.value.parse::<CssColor>().unwrap();
-                                    stroke  = Some(Color::Rgba((col.r as f32)/255.0, (col.g as f32)/255.0, (col.b as f32)/255.0, col.a));
-                                } else {
-                                    stroke  = None;
-                                }
-                            }
-                            "stroke-opacity"    => { 
-                                let alpha           = decl.value.parse::<f32>().unwrap();
-                                let new_stroke      = stroke.unwrap_or(Color::Rgba(0.0, 0.0, 0.0, 1.0));
-                                let (r, g, b, _a)   = new_stroke.to_rgba_components();
-                                stroke              = Some(Color::Rgba(r, g, b, alpha));
-                            }
-                            "stroke-width"      => { 
-                                if decl.value.ends_with("px") {
-                                    drawing.line_width(decl.value[0..(decl.value.len()-2)].parse().unwrap());
-                                } else {
-                                    println!("?? {:?}", decl.value);
-                                }
-                            }
-                            "stroke-linecap"    => { }
-                            "stroke-miterlimit" => { }
-
-
-                            _ => { println!("Other decl: {:?}", decl.name); }
-                        }
-                    }
-
-                    if let Some(fill) = fill {
-                        drawing.fill_color(fill);
-                        drawing.fill();
-                    }
-
-                    if let Some(stroke) = stroke {
-                        drawing.stroke_color(stroke);
-                        drawing.stroke();
-                    }
+                    let style = Style::from_style_value(style);
+                    style.render_path(drawing);
                 }
             }
             _ => { }
