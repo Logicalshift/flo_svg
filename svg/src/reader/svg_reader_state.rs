@@ -189,7 +189,7 @@ impl SvgReaderState {
             LengthUnit::Mm      => Some(Length::mm(length.number)),
             LengthUnit::Pt      => Some(Length::Points(length.number as _)),
             LengthUnit::Pc      => todo!(),
-            LengthUnit::Percent => todo!(),
+            LengthUnit::Percent => Some(Length::Percent(length.number as _)),
         };
 
         canvas_length
