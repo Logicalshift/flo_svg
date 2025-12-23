@@ -7,6 +7,9 @@ use flo_render_software::pixel::*;
 use flo_render_software::render::*;
 use flo_render_software::scanplan::*;
 
+use rascii_art;
+use image::{DynamicImage, ImageBuffer};
+
 use std::fs::*;
 use std::io::*;
 
@@ -75,7 +78,11 @@ pub fn render(arguments: &SvgFloCli, svg_file: &String) {
         // Render to the frame
         rgba.render(renderer, &canvas_drawing);
 
-        println!("Terminal render")
+        let image   = DynamicImage::ImageRgba8(ImageBuffer::from_vec(pixel_width as _, pixel_height as _, frame).unwrap());
+        let options = rascii_art::RenderOptions::new().colored(true).width(79).charset(rascii_art::charsets::BLOCK);
+        rascii_art::render_image(&image, &mut output, &options).unwrap();
+
+        output.write(&[10, 10]).unwrap();
     } else {
         // Render as a png file if not attached to a terminal
         let mut render_target   = PngRenderTarget::from_bufwriter(output, pixel_width, pixel_height, 2.2);
