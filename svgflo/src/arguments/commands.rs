@@ -11,7 +11,7 @@ pub enum SvgFloCommands {
         svg_file: String,
     },
 
-    /// Converts the SVG file to a list of instructions that can be used to render it
+    /// Converts a SVG file to a list of instructions that can be used to render it
     Describe {
         svg_file: String,
     },
