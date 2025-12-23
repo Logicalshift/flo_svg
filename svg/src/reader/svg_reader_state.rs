@@ -1,4 +1,5 @@
 use super::document::*;
+use super::length::*;
 use super::style::*;
 
 use flo_canvas::*;
@@ -171,31 +172,26 @@ impl SvgReaderState {
     ///
     /// Converts a length to flo_canvas coordinates
     ///
-    pub (super) fn length(length: &str) -> Option<f32> {
-        use svgtypes::*;
-
-        // Conversion values
-        let dpi         = 72.0;
-        let in_to_mm    = 25.4;
-        let mm_to_in    = 1.0/in_to_mm;
+    pub (super) fn length(length: &str) -> Option<Length> {
+        use svgtypes::{LengthUnit};
 
         // Parse the length
         let length = length.parse::<svgtypes::Length>().ok()?;
 
         // Result depends on the length unit
         let canvas_length = match length.unit {
-            LengthUnit::None    => Some(length.number),
+            LengthUnit::None    => Some(Length::Canvas(length.number as _)),
             LengthUnit::Em      => todo!(),
             LengthUnit::Ex      => todo!(),
-            LengthUnit::Px      => Some(length.number),
-            LengthUnit::In      => Some(length.number * dpi),
-            LengthUnit::Cm      => Some(length.number * 10.0 * mm_to_in * dpi),
-            LengthUnit::Mm      => Some(length.number * mm_to_in * dpi),
-            LengthUnit::Pt      => Some(length.number / 72.0 * dpi),
+            LengthUnit::Px      => Some(Length::Canvas(length.number as _)),
+            LengthUnit::In      => Some(Length::inches(length.number)),
+            LengthUnit::Cm      => Some(Length::mm(length.number * 10.0)),
+            LengthUnit::Mm      => Some(Length::mm(length.number)),
+            LengthUnit::Pt      => Some(Length::Points(length.number as _)),
             LengthUnit::Pc      => todo!(),
             LengthUnit::Percent => todo!(),
         };
 
-        canvas_length.map(|len| len as _)
+        canvas_length
     }
 }
