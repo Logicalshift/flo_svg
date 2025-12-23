@@ -110,6 +110,7 @@ impl Style {
     /// Creates a style from the attributes attached to a tag
     ///
     pub fn from_attributes(attributes: &HashMap<String, Value>) -> Self {
+        let mut current_color   = None;
         let mut fill            = None;
         let mut stroke          = None;
         let mut line_width      = None;
@@ -147,12 +148,13 @@ impl Style {
                 ("stop-color", _)           => { }
                 ("stop-opacity", _)         => { }
 
+                ("color", val)                      => { current_color = Self::color(val, &current_color); }
                 ("color-interpolation", _)          => { }
                 ("color-interpolation-filters", _)  => { }
                 ("color-profile", _)                => { }
                 ("color-rendering", _)              => { }
-                ("fill", _)                         => { }
-                ("fill-opacity", _)                 => { }
+                ("fill", val)                       => { fill = Self::color(val, &current_color).map(|color| FillStyle::Color(color)); }
+                ("fill-opacity", val)               => { fill_opacity = val.parse::<f32>().ok(); }
                 ("fill-rule", _)                    => { }
                 ("image-rendering", _)              => { }
                 ("marker", _)                       => { }
@@ -160,13 +162,14 @@ impl Style {
                 ("marker-mid", _)                   => { }
                 ("marker-start", _)                 => { }
                 ("shape-rendering", _)              => { }
-                ("stroke", _)                       => { }
+                ("stroke", val)                     => { stroke = Self::color(val, &current_color).map(|color| StrokeStyle::Solid(color)); }
                 ("stroke-dasharray", _)             => { }
                 ("stroke-dashoffset", _)            => { }
                 ("stroke-linecap", _)               => { }
                 ("stroke-linejoin", _)              => { }
                 ("stroke-miterlimit", _)            => { }
-                ("stroke-opacity", _)               => { }
+                ("stroke-opacity", val)             => { stroke_opacity = val.parse::<f32>().ok(); }
+                ("stroke-width", val)               => { line_width = Self::length(val); }
                 ("text-rendering", _)               => { }
 
                 ("alignment-baseline", _)               => { }
@@ -184,6 +187,33 @@ impl Style {
 
         Self {
             fill, stroke, line_width, fill_opacity, stroke_opacity
+        }
+    }
+
+    ///
+    /// Changes an SVG value into a colour
+    ///
+    fn color(value: &str, current_color: &Option<Color>) -> Option<Color> {
+        match value {
+            "none"          => None,
+            "currentColor"  => *current_color,
+
+            _ => {
+                let col = value.parse::<CssColor>().unwrap();
+                Some(Color::Rgba((col.r as f32)/255.0, (col.g as f32)/255.0, (col.b as f32)/255.0, col.a))
+            }
+        }
+    }
+
+    ///
+    /// Interprets a length to flo_canvas units
+    ///
+    fn length(value: &str) -> Option<f32> {
+        if value.ends_with("px") {
+            value.parse::<f32>().ok()
+        } else {
+            println!("?? {:?}", value);
+            None
         }
     }
 
