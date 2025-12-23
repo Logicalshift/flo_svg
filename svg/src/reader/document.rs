@@ -34,10 +34,16 @@ impl Default for SvgDocument {
 }
 
 impl SvgDocument {
+    #[inline] pub fn viewbox(&self) -> Option<((f32, f32), (f32, f32))> { self.viewbox }
+    #[inline] pub fn x(&self) -> Option<Length>                         { self.x }
+    #[inline] pub fn y(&self) -> Option<Length>                         { self.x }
+    #[inline] pub fn width(&self) -> Option<Length>                     { self.width }
+    #[inline] pub fn height(&self) -> Option<Length>                    { self.height }
+
     ///
-    /// Returns the desired render width of this document, if specified
+    /// Returns the desired render width of this document (in canvas units), if specified
     ///
-    fn render_width(&self) -> Option<f32> {
+    pub fn render_width(&self) -> Option<f32> {
         if let Some(viewbox) = self.viewbox {
             Some(viewbox.1.0 - viewbox.0.0)
         } else if let Some(width) = self.width {
@@ -48,9 +54,9 @@ impl SvgDocument {
     }
 
     ///
-    /// Returns the desired render height of this document, if specified
+    /// Returns the desired render height of this document (in canvas units), if specified
     ///
-    fn render_height(&self) -> Option<f32> {
+    pub fn render_height(&self) -> Option<f32> {
         if let Some(viewbox) = self.viewbox {
             Some(viewbox.1.1 - viewbox.0.1)
         } else if let Some(height) = self.height {
