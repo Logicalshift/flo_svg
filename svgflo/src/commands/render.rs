@@ -1,12 +1,13 @@
 use crate::arguments::*;
 
 use flo_svg::*;
-use flo_render_software::*;
+use flo_render_software::draw::*;
+use flo_render_software::pixel::*;
+use flo_render_software::render::*;
+use flo_render_software::scanplan::*;
 
 use std::fs::*;
 use std::io::*;
-
-use serde::*;
 
 ///
 /// Renders a SVG file to a PNG file
@@ -16,17 +17,16 @@ pub fn render(arguments: &SvgFloCli, svg_file: &String) {
     // TODO: file error handling
     let is_terminal;
 
-    let mut output: Box<dyn Write> = if let Some(output_file) = &arguments.output {
-        let output_file     = File::create_new(output_file).unwrap();
+    let mut output: BufWriter<Box<dyn Write>> = if let Some(output_file) = &arguments.output {
+        let output_file     = File::create(output_file).unwrap();
         is_terminal         = output_file.is_terminal();
-        let output_writer   = BufWriter::new(output_file);
-
-        Box::new(output_writer)
+        
+        BufWriter::new(Box::new(output_file))
     } else {
         let stdout  = stdout();
         is_terminal = stdout.is_terminal();
 
-        Box::new(stdout)
+        BufWriter::new(Box::new(stdout))
     };
 
     // Read the svg file
@@ -37,5 +37,29 @@ pub fn render(arguments: &SvgFloCli, svg_file: &String) {
 
     // Parse the svg file
     let mut drawing = vec![];
-    parse_svg(svg_file, &mut drawing).unwrap();
+    let document    = parse_svg(svg_file, &mut drawing).unwrap();
+
+    // Figure out the size of the region to render on
+    let render_width    = document.render_width().unwrap_or(1024.0);
+    let render_height   = document.render_height().unwrap_or(768.0);
+
+    // TODO: Use width, height properties to figure out the pixel width/height (will need to scale them if one is missing. x, y coordinates don't matter for us)
+    let pixel_width     = render_width.ceil() as usize;
+    let pixel_height    = render_height.ceil() as usize;
+
+    // Render the image
+    let mut canvas_drawing = CanvasDrawing::<F32LinearPixel, 4>::empty();
+    canvas_drawing.draw(drawing);
+
+    if is_terminal {
+        let mut frame       = vec![0u8; 1920*1080*4];
+        let mut rgba        = FrameU8Rgba::from_bytes(1920, 1080, 2.2, &mut frame).unwrap();
+
+        println!("Terminal render")
+    } else {
+        let mut render_target   = PngRenderTarget::from_bufwriter(output, pixel_width, pixel_height, 2.2);
+        let renderer            = CanvasDrawingRegionRenderer::new(ShardScanPlanner::default(), ScanlineRenderer::new(canvas_drawing.program_runner(1080.0)), 1080);
+
+        render_target.render(renderer, &canvas_drawing);
+    }
 }
