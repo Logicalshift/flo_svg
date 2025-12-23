@@ -1,6 +1,7 @@
 [workspace]
 members     = [
     "svg",
+    "svgflo",
 ]
 resolver    = "2"
 
@@ -16,6 +17,9 @@ flo_render              = { git = "https://github.com/Logicalshift/flo_draw", br
 flo_render_canvas       = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
 flo_render_gl_offscreen = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
 flo_render_software     = { git = "https://github.com/Logicalshift/flo_draw", branch = "v0.4" }
+
+flo_svg                 = { path = "svg" }
+svgflo                  = { path = "svgflo" }
 
 # flo_canvas              = { path = "../flo_draw/canvas" }
 # flo_render              = { path = "../flo_draw/render" }

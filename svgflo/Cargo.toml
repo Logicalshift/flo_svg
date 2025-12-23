@@ -1,0 +1,13 @@
+[package]
+name                = "svgflo"
+version             = "0.1.0"
+authors             = ["Andrew Hunter <andrew@logicalshift.co.uk>"]
+edition             = "2021"
+license             = "Apache-2.0"
+readme              = "../README.md"
+description         = "Command-line tool for manipulating svg files"
+
+[dependencies]
+flo_svg             = "0.1"
+flo_canvas          = "0.4"
+flo_render_software = "0.4"
