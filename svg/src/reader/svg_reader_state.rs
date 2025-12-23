@@ -73,10 +73,15 @@ impl SvgReaderState {
                     }
                 }
 
-                if let Some(style) = attributes.get("style") {
-                    let style = Style::from_style_value(style);
-                    style.render_path(drawing);
+                let mut style = Style::from_attributes(&attributes);
+
+                if let Some(css_style) = attributes.get("style") {
+                    let css_style = Style::from_style_value(css_style);
+
+                    style = css_style.merge(&style);
                 }
+
+                style.render_path(drawing);
             }
 
             Event::Tag("rect", Type::Start, _attributes) => { todo!("rect") }
