@@ -53,6 +53,7 @@ pub fn render(arguments: &SvgFloCli, svg_file: &String) {
 
     setup_steps.clear_canvas(Color::Rgba(0.0, 0.0, 0.0, 0.0));
     setup_steps.canvas_height(render_height);
+    setup_steps.transform(Transform2D::scale(1.0, -1.0));
 
     if let Some(viewbox) = document.viewbox() {
         setup_steps.center_region(viewbox.0.0, viewbox.0.1, viewbox.1.0, viewbox.1.1);
