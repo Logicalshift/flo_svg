@@ -67,9 +67,13 @@ pub fn render(arguments: &SvgFloCli, svg_file: &String) {
     canvas_drawing.draw(drawing);
 
     if is_terminal {
-        // TOOD: ascii art if we're attached to a terminal
-        let mut frame       = vec![0u8; 1920*1080*4];
-        let mut rgba        = FrameU8Rgba::from_bytes(1920, 1080, 2.2, &mut frame).unwrap();
+        // Ascii art if we're on the terminal
+        let mut frame   = vec![0u8; pixel_width*pixel_height*4];
+        let mut rgba    = FrameU8Rgba::from_bytes(pixel_width, pixel_height, 2.2, &mut frame).unwrap();
+        let renderer    = CanvasDrawingRegionRenderer::new(ShardScanPlanner::default(), ScanlineRenderer::new(canvas_drawing.program_runner(1080.0)), 1080);
+
+        // Render to the frame
+        rgba.render(renderer, &canvas_drawing);
 
         println!("Terminal render")
     } else {
