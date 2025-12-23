@@ -1,5 +1,6 @@
 use crate::arguments::*;
 
+use flo_canvas::*;
 use flo_svg::*;
 use flo_render_software::draw::*;
 use flo_render_software::pixel::*;
@@ -47,16 +48,31 @@ pub fn render(arguments: &SvgFloCli, svg_file: &String) {
     let pixel_width     = render_width.ceil() as usize;
     let pixel_height    = render_height.ceil() as usize;
 
+    // Create the setup steps for this rendering
+    let mut setup_steps = vec![];
+
+    setup_steps.clear_canvas(Color::Rgba(0.0, 0.0, 0.0, 0.0));
+    setup_steps.canvas_height(render_height);
+
+    if let Some(viewbox) = document.viewbox() {
+        setup_steps.center_region(viewbox.0.0, viewbox.0.1, viewbox.1.0, viewbox.1.1);
+    } else {
+        setup_steps.center_region(0.0, 0.0, render_width, render_height);
+    }
+
     // Render the image
     let mut canvas_drawing = CanvasDrawing::<F32LinearPixel, 4>::empty();
+    canvas_drawing.draw(setup_steps);
     canvas_drawing.draw(drawing);
 
     if is_terminal {
+        // TOOD: ascii art if we're attached to a terminal
         let mut frame       = vec![0u8; 1920*1080*4];
         let mut rgba        = FrameU8Rgba::from_bytes(1920, 1080, 2.2, &mut frame).unwrap();
 
         println!("Terminal render")
     } else {
+        // Render as a png file if not attached to a terminal
         let mut render_target   = PngRenderTarget::from_bufwriter(output, pixel_width, pixel_height, 2.2);
         let renderer            = CanvasDrawingRegionRenderer::new(ShardScanPlanner::default(), ScanlineRenderer::new(canvas_drawing.program_runner(1080.0)), 1080);
 
