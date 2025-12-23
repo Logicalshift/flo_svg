@@ -32,3 +32,31 @@ impl Default for SvgDocument {
         }
     }
 }
+
+impl SvgDocument {
+    ///
+    /// Returns the desired render width of this document, if specified
+    ///
+    fn render_width(&self) -> Option<f32> {
+        if let Some(viewbox) = self.viewbox {
+            Some(viewbox.1.0 - viewbox.0.0)
+        } else if let Some(width) = self.width {
+            width.canvas_units(None)
+        } else {
+            None
+        }
+    }
+
+    ///
+    /// Returns the desired render height of this document, if specified
+    ///
+    fn render_height(&self) -> Option<f32> {
+        if let Some(viewbox) = self.viewbox {
+            Some(viewbox.1.1 - viewbox.0.1)
+        } else if let Some(height) = self.height {
+            height.canvas_units(None)
+        } else {
+            None
+        }
+    }
+}

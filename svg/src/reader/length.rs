@@ -1,7 +1,7 @@
 ///
 /// How a distance is specified
 ///
-#[derive(Clone, Debug)]
+#[derive(Copy, Clone, Debug)]
 pub enum Length {
     /// Canvas coordinates
     Canvas(f32),
