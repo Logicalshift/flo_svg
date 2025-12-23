@@ -5,8 +5,11 @@ use flo_canvas::*;
 
 use svg::node::element::path::*;
 use svg::node::element::tag::*;
+use svg::node::{Value};
 use svg::parser;
 use svgtypes::{Transform};
+
+use std::collections::{HashMap};
 
 ///
 /// The state of an SVG -> flo_canvas reader
@@ -31,7 +34,8 @@ impl SvgReaderState {
         use parser::{Event};
 
         match event {
-            Event::Tag("svg", Type::Start, _attributes) => {
+            Event::Tag("svg", Type::Start, attributes) => {
+                self.parse_svg_attributes(&attributes);
             },
 
             Event::Tag("g", Type::Start, attributes) => {
@@ -126,9 +130,72 @@ impl SvgReaderState {
     }
 
     ///
-    ///
+    /// The description for this document
     ///
     pub fn document(&self) -> SvgDocument {
         self.document.clone()
+    }
+
+    ///
+    /// Parses the attributes on the 'svg' tag
+    ///
+    fn parse_svg_attributes(&mut self, attributes: &HashMap<String, Value>) {
+        for (name, value) in attributes.iter() {
+            let name = name.as_str();
+
+            match name {
+                "viewbox"   => { self.document.viewbox = Self::viewbox(value); }
+                "x"         => { self.document.x = Self::length(value); }
+                "y"         => { self.document.y = Self::length(value); }
+                "width"     => { self.document.width = Self::length(value); }
+                "height"    => { self.document.height = Self::length(value); }
+
+                _           =>  { }
+            }
+        }
+
+        if let Some(viewbox) = attributes.get("viewbox") {
+            self.document.viewbox = Self::viewbox(viewbox);
+        }
+    }
+
+    ///
+    /// Parses the viewbox for this document
+    ///
+    fn viewbox(viewbox: &str) -> Option<((f32, f32), (f32, f32))> {
+        let viewbox = viewbox.parse::<svgtypes::ViewBox>().ok()?;
+
+        Some(((viewbox.x as _, viewbox.y as _), ((viewbox.w + viewbox.x) as _, ((viewbox.h + viewbox.y) as _))))
+    }
+
+    ///
+    /// Converts a length to flo_canvas coordinates
+    ///
+    pub (super) fn length(length: &str) -> Option<f32> {
+        use svgtypes::*;
+
+        // Conversion values
+        let dpi         = 72.0;
+        let in_to_mm    = 25.4;
+        let mm_to_in    = 1.0/in_to_mm;
+
+        // Parse the length
+        let length = length.parse::<svgtypes::Length>().ok()?;
+
+        // Result depends on the length unit
+        let canvas_length = match length.unit {
+            LengthUnit::None    => Some(length.number),
+            LengthUnit::Em      => todo!(),
+            LengthUnit::Ex      => todo!(),
+            LengthUnit::Px      => Some(length.number),
+            LengthUnit::In      => Some(length.number * dpi),
+            LengthUnit::Cm      => Some(length.number * 10.0 * mm_to_in * dpi),
+            LengthUnit::Mm      => Some(length.number * mm_to_in * dpi),
+            LengthUnit::Pt      => Some(length.number / 72.0 * dpi),
+            LengthUnit::Pc      => todo!(),
+            LengthUnit::Percent => todo!(),
+        };
+
+        canvas_length.map(|len| len as _)
     }
 }
