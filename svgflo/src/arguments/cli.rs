@@ -9,9 +9,9 @@ use clap::*;
 #[command(version, about, long_about = None)]
 pub struct SvgFloCli {
     #[command(subcommand)]
-    command: SvgFloCommands,
+    pub (crate) command: SvgFloCommands,
 
     /// The file where the output should be sent (stdout by default)
     #[arg(short, long)]
-    output: Option<String>,
+    pub (crate) output: Option<String>,
 }
