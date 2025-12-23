@@ -1,3 +1,4 @@
+use super::document::*;
 use super::style::*;
 
 use flo_canvas::*;
@@ -11,12 +12,13 @@ use svgtypes::{Transform};
 /// The state of an SVG -> flo_canvas reader
 ///
 pub struct SvgReaderState {
-
+    document: SvgDocument
 }
 
 impl Default for SvgReaderState {
     fn default() -> Self {
-        SvgReaderState { 
+        SvgReaderState {
+            document: SvgDocument::default(),
         }
     }
 }
@@ -121,5 +123,12 @@ impl SvgReaderState {
 
             _ => { }
         }
+    }
+
+    ///
+    ///
+    ///
+    pub fn document(&self) -> SvgDocument {
+        self.document.clone()
     }
 }
