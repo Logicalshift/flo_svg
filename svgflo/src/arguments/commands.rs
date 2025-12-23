@@ -9,5 +9,10 @@ pub enum SvgFloCommands {
     Render {
         /// The file to render
         svg_file: String,
-    }
+    },
+
+    /// Converts the SVG file to a list of instructions that can be used to render it
+    Describe {
+        svg_file: String,
+    },
 }
