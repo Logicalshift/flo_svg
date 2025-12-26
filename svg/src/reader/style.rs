@@ -1,3 +1,5 @@
+use super::svg_reader_state::*;
+
 use flo_canvas::*;
 
 use svg::node::{Value};
@@ -187,12 +189,9 @@ impl Style {
     /// Interprets a length to flo_canvas units
     ///
     fn length(value: &str) -> Option<f32> {
-        if value.ends_with("px") {
-            value.parse::<f32>().ok()
-        } else {
-            println!("?? {:?}", value);
-            None
-        }
+        let length = SvgReaderState::length(value);
+
+        length.and_then(|length| length.canvas_units(None))
     }
 
     ///
