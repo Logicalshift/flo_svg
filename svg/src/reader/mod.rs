@@ -8,3 +8,4 @@ mod length;
 pub use iterator::*;
 pub use parse::*;
 pub use document::*;
+pub use length::*;
