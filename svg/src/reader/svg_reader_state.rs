@@ -141,7 +141,7 @@ impl SvgReaderState {
     /// Parses the attributes on the 'svg' tag
     ///
     fn parse_svg_attributes(&mut self, attributes: &HashMap<String, Value>) {
-        for (name, value) in attributes.iter() {
+        for (name, value) in attributes.iter().map(|(name, value)| (name.to_lowercase(), value)) {
             let name = name.as_str();
 
             match name {

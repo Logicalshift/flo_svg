@@ -57,7 +57,8 @@ impl Style {
         let mut stroke_opacity  = None;
 
         for decl in rule.declarations.iter() {
-            match decl.name {
+            let name = decl.name.to_lowercase();
+            match name.as_str() {
                 "fill"              => { fill = Self::color(decl.value, &None).map(|col| FillStyle::Color(col)); }
                 "fill-opacity"      => { fill_opacity = decl.value.parse::<f32>().ok(); }
                 "fill-rule"         => { }
@@ -93,7 +94,9 @@ impl Style {
         let mut stroke_opacity  = None;
 
         for attr in attributes.iter() {
-            match (attr.0.as_str(), attr.1) {
+            let name = attr.0.to_lowercase();
+
+            match (name.as_str(), attr.1) {
                 ("font", _)                 => { }
                 ("font-family", _)          => { }
                 ("font-size", _)            => { }
